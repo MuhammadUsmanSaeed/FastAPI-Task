@@ -4,12 +4,16 @@ from fastapi.params import Depends
 from sqlalchemy.orm.session import Session
 from Models import models
 from Database.database import engine, get_db
+from authentication import login
 from authentication.hashing import Hash
 from Schemas.schemas import Item_Schema, My_Item_Schema, User_Schema, My_User_Schema
+from security.oauth2 import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.include_router(login.router)
 
 
 # Welcome Page
@@ -20,7 +24,8 @@ async def read_root() -> dict:
 
 # Get All Items
 @app.get('/items/', response_model=List[My_Item_Schema], tags=['Items'])
-def get_item(db: Session = Depends(get_db)):
+def get_item(db: Session = Depends(get_db), get_current_user: User_Schema =
+             Depends(get_current_user)):
     my_items = db.query(models.Item).all()
     return my_items
 
