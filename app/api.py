@@ -24,7 +24,7 @@ async def read_root() -> dict:
 
 # Get All Items
 @app.get('/items/', response_model=List[My_Item_Schema], tags=['Items'])
-def get_item(db: Session = Depends(get_db), get_current_user: User_Schema =
+def get_item(db: Session = Depends(get_db), current_user: User_Schema =
              Depends(get_current_user)):
     my_items = db.query(models.Item).all()
     return my_items
@@ -32,7 +32,8 @@ def get_item(db: Session = Depends(get_db), get_current_user: User_Schema =
 
 # Search by ID
 @app.get('/items/{id}', status_code=status.HTTP_200_OK, response_model=My_Item_Schema, tags=['Items'])
-def item_detail(id: int, db: Session = Depends(get_db)):
+def item_detail(id: int, db: Session = Depends(get_db), current_user: User_Schema =
+             Depends(get_current_user)):
     my_item = db.query(models.Item).get(id)
 
     if my_item:
@@ -43,7 +44,8 @@ def item_detail(id: int, db: Session = Depends(get_db)):
 
 # Post Item
 @app.post('/items/', status_code=status.HTTP_201_CREATED, tags=['Items'])
-def add_item(item: Item_Schema, db: Session = Depends(get_db)):
+def add_item(item: Item_Schema, db: Session = Depends(get_db), current_user: User_Schema =
+             Depends(get_current_user)):
     new_item = models.Item(name_of_item=item.name_of_item,
                            location_of_lost_or_found_item=item.location_of_lost_or_found_item,
                            description_of_item=item.description_of_item,owner_id=1)
@@ -55,7 +57,8 @@ def add_item(item: Item_Schema, db: Session = Depends(get_db)):
 
 # Update Item
 @app.put('/items/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['Items'])
-def update_item(id, item: Item_Schema, db: Session = Depends(get_db)):
+def update_item(id, item: Item_Schema, db: Session = Depends(get_db), current_user: User_Schema =
+             Depends(get_current_user)):
     db.query(models.Item).filter(models.Item.id == id).update(
         {'name_of_item': item.name_of_item, 'location_of_lost_or_found_item': item.location_of_lost_or_found_item,
          'description_of_item': item.description_of_item})
@@ -65,7 +68,8 @@ def update_item(id, item: Item_Schema, db: Session = Depends(get_db)):
 
 # Delete Item
 @app.delete('/items/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['Items'])
-def delete_item(id: int, db: Session = Depends(get_db)):
+def delete_item(id: int, db: Session = Depends(get_db), current_user: User_Schema =
+             Depends(get_current_user)):
     db.query(models.Item).filter(models.Item.id == id).delete(synchronize_session=False)
     db.commit()
     return {'message': 'Item has been deleted'}
