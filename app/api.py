@@ -2,11 +2,11 @@ from fastapi import FastAPI, status, HTTPException
 from typing import List
 from fastapi.params import Depends
 from sqlalchemy.orm.session import Session
-from Models import models
-from Database.database import engine, get_db
+from models import models
+from database.database import engine, get_db
 from authentication import login
 from authentication.hashing import Hash
-from Schemas.schemas import Item_Schema, My_Item_Schema, User_Schema, My_User_Schema
+from schemas.schemas import Item_Schema, My_Item_Schema, User_Schema, My_User_Schema
 from security.oauth2 import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
