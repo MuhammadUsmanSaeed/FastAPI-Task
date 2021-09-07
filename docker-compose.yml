@@ -13,13 +13,13 @@
     app:
       container_name: app
       build:
-        context: ./
+        context: .
         dockerfile: Dockerfile
       environment:
         - PORT=8000
         - SQLALCHEMY_DATABASE_URL=mysql://debian-sys-maint:LhUMp6OwKVZVXoOD@localhost/fastapi
       ports:
-        - 8000:8000
+        - 8080:80
       depends_on:
         - mysql
       restart: always
