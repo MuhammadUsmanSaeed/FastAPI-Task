@@ -13,14 +13,14 @@ class Item_Schema(BaseModel):
 
 
 class User_Schema(BaseModel):
-    name:str
-    email:str
-    password:str
+    name: str
+    email: str
+    password: str
 
 
 class My_User_Schema(BaseModel):
-    name:str
-    email:str
+    name: str
+    email: str
     items: List[Item_Schema] = []
 
     class Config():
@@ -40,6 +40,7 @@ class My_Item_Schema(Item_Schema):
 class Login(BaseModel):
     username: str
     password: str
+
 
 class Token(BaseModel):
     access_token: str
