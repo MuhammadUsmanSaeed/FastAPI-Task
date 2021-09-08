@@ -9,7 +9,7 @@ from authentication.hashing import Hash
 from schemas.schemas import Item_Schema, My_Item_Schema, User_Schema, My_User_Schema
 from security.oauth2 import get_current_user
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
