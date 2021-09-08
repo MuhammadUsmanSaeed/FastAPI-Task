@@ -8,6 +8,7 @@ from authentication import login
 from authentication.hashing import Hash
 from schemas.schemas import Item_Schema, My_Item_Schema, User_Schema, My_User_Schema
 from security.oauth2 import get_current_user
+from fastapi_pagination import Page, LimitOffsetPage, paginate, add_pagination
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -23,11 +24,14 @@ async def read_root() -> dict:
 
 
 # Get All Items
-@app.get('/items/', response_model=List[My_Item_Schema], tags=['Items'])
+@app.get('/items/', response_model=Page[My_Item_Schema], tags=['Items'])
+@app.get('/item/limit-offset',response_model=LimitOffsetPage[My_Item_Schema], tags=['Search'])
 def get_item(db: Session = Depends(get_db), current_user: User_Schema =
              Depends(get_current_user)):
-    my_items = db.query(models.Item).all()
-    return my_items
+    # my_items = db.query(models.Item).all()
+    return paginate(db.query(models.Item).all())
+
+add_pagination(app)
 
 
 # Search by ID
