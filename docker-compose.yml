@@ -3,23 +3,27 @@
   services:
 
     mysql:
-      container_name: mysqldb
+      container_name: mysqldbcont
       image: mysql:5.7
       restart: always
+      ports:
+        - 3306:3306
       environment:
         MYSQL_ROOT_PASSWORD: LhUMp6OwKVZVXoOD
         MYSQL_DATABASE: debian-sys-maint
 
     app:
-      container_name: app
-      build:
-        context: .
-        dockerfile: Dockerfile
+      container_name: appcont
+      image: testapp
+      build: ./
+      command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
       environment:
         - PORT=8000
         - SQLALCHEMY_DATABASE_URL=mysql://debian-sys-maint:LhUMp6OwKVZVXoOD@localhost/fastapi
       ports:
-        - 8080:80
+        - 8080:8000
+      volumes:
+        - .:/app
       depends_on:
         - mysql
       restart: always
