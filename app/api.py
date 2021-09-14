@@ -4,6 +4,7 @@ from fastapi_pagination import Page, LimitOffsetPage, paginate, add_pagination
 from sqlalchemy.orm.session import Session
 
 from authentication import login
+from authentication import sendEmail
 from authentication.hashing import Hash
 from database.database import get_db
 from models import models
@@ -13,6 +14,7 @@ from security.oauth2 import get_current_user
 app = FastAPI()
 
 app.include_router(login.router)
+app.include_router(sendEmail.router)
 
 
 # Welcome Page
@@ -79,7 +81,7 @@ Depends(get_current_user)):
 
 
 # Create User
-@app.post('/user/', status_code=status.HTTP_201_CREATED, tags=['Users'])
+@app.post('/user/', status_code=status.HTTP_201_CREATED, tags=['Sign up'])
 def create_user(user: User_Schema, db: Session = Depends(get_db)):
     new_user = models.User(name=user.name,
                            email=user.email,
@@ -91,7 +93,7 @@ def create_user(user: User_Schema, db: Session = Depends(get_db)):
 
 
 # Get User
-@app.get('/user/{id}', status_code=status.HTTP_200_OK, response_model=My_User_Schema, tags=['Users'])
+@app.get('/user/{id}', status_code=status.HTTP_200_OK, response_model=My_User_Schema, tags=['Sign up'])
 def user_detail(id: int, db: Session = Depends(get_db)):
     my_user = db.query(models.User).get(id)
 
@@ -99,3 +101,4 @@ def user_detail(id: int, db: Session = Depends(get_db)):
         return my_user
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="The user does not exists")
+

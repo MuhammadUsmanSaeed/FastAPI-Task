@@ -21,7 +21,7 @@
         - PORT=8000
         - SQLALCHEMY_DATABASE_URL=mysql://debian-sys-maint:LhUMp6OwKVZVXoOD@localhost/fastapi
       ports:
-        - 8080:8000
+        - 8000:8000
       volumes:
         - .:/app
       depends_on:

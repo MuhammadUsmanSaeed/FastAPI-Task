@@ -7,7 +7,7 @@ from database.database import get_db
 from models import models
 from security import token
 
-router = APIRouter(tags=['Authentication'])
+router = APIRouter(tags=['Log in'])
 
 
 @router.post('/login')
