@@ -1,6 +1,6 @@
 DATABASE_CONFIG = {
-    'host': 'localhost',
-    'dbname': 'fastapi',
-    'user': 'debian-sys-maint',
-    'password': 'LhUMp6OwKVZVXoOD',
+    'MYSQL_HOST': 'db',
+    'MYSQL_DATABASE': 'fastapi',
+    'MYSQL_USERNAME': 'root',
+    'MySQL_PASSWORD': 'rootadmin123',
 }

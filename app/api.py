@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import FastAPI, status, HTTPException
 from fastapi.params import Depends
 from fastapi_pagination import Page, LimitOffsetPage, paginate, add_pagination
@@ -23,6 +25,13 @@ async def read_root() -> dict:
     return {"message": "Welcome to Web-App!."}
 
 
+# Search
+@app.get("/search", status_code=status.HTTP_200_OK)
+def search_item(item: Optional[str], db: Session = Depends(get_db)):
+    search_items = db.query(models.Item).filter(models.Item.name_of_item == item).all()
+    return {"search_items": search_items}
+
+
 # Get All Items
 @app.get('/items/', response_model=Page[My_Item_Schema], tags=['Items'])
 @app.get('/item/limit-offset', response_model=LimitOffsetPage[My_Item_Schema], tags=['Search'])
@@ -35,7 +44,7 @@ Depends(get_current_user)):
 add_pagination(app)
 
 
-# Search by ID
+# Get by ID
 @app.get('/items/{id}', status_code=status.HTTP_200_OK, response_model=My_Item_Schema, tags=['Items'])
 def item_detail(id: int, db: Session = Depends(get_db), current_user: User_Schema =
 Depends(get_current_user)):
@@ -101,4 +110,3 @@ def user_detail(id: int, db: Session = Depends(get_db)):
         return my_user
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="The user does not exists")
-
